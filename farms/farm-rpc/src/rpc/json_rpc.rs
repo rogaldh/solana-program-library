@@ -4895,7 +4895,7 @@ pub async fn stage(config: &Config) -> AdHoc {
             .manage(fund_stats)
             .attach(Cors)
             .attach(AdHoc::on_ignite("JSON RPC Init", init_rpc))
-            .mount("/", FileServer::from(relative!("static")))
+            .mount("/", FileServer::from("/static"))
             .mount(
                 "/api/v1",
                 routes![

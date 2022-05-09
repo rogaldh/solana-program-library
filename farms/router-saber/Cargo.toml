@@ -6,7 +6,7 @@ authors = ["Solana Maintainers <maintainers@solana.foundation>"]
 repository = "https://github.com/solana-labs/solana-program-library"
 license = "Apache-2.0"
 homepage = "https://solana.com/"
-edition = "2018"
+edition = "2021"
 
 [features]
 no-entrypoint = []
@@ -14,16 +14,16 @@ debug = []
 
 [dependencies]
 solana-farm-sdk = { path = "../farm-sdk" }
-solana-program = "1.10.15"
+solana-program = "1.9.18"
 arrayref = "0.3.6"
-stable-swap-client = "1.5.2"
-quarry-mine = { version = "1.10.0", features = ["no-entrypoint"] }
-quarry-mint-wrapper = { version = "1.10.0", features = ["no-entrypoint"] }
-quarry-redeemer = { version = "1.10.0", features = ["no-entrypoint"] }
+stable-swap-client = "1.8.1"
+quarry-mine = { version = "5.0.2", features = ["no-entrypoint"] }
+quarry-mint-wrapper = { version = "5.0.2", features = ["no-entrypoint"] }
+quarry-redeemer = { version = "5.0.2", features = ["no-entrypoint"] }
 spl-token = { version = "3.2.0", features = ["no-entrypoint"] }
 
 [dev-dependencies]
-solana-program-test = "1.10.15"
+solana-program-test = "1.9.18"
 
 [lib]
 crate-type = ["cdylib", "lib"]

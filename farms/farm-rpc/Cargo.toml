@@ -6,29 +6,29 @@ authors = ["Solana Maintainers <maintainers@solana.foundation>"]
 repository = "https://github.com/solana-labs/solana-program-library"
 license = "Apache-2.0"
 homepage = "https://solana.com/"
-edition = "2018"
+edition = "2021"
 
 [features]
 debug = []
 
 [dependencies]
-log = "0.4.14"
+log = "0.4.16"
 bs58 = "0.4.0"
-clap = "2.33.3"
+clap = "2.34.0"
 dirs-next = "2.0.0"
 lazy_static = "1.4.0"
-reqwest = "0.11.6"
+reqwest = "0.11.10"
 rocket = { version = "0.5.0-rc.1", features = ["json"] }
-serde = "1.0.130"
-serde_derive = "1.0.130"
-serde_json = "1.0.69"
-serde_yaml = "0.8.21"
-solana-client = "1.10.8"
-solana-logger = "1.10.8"
-solana-version = "1.10.8"
-solana-clap-utils = "1.10.8"
-solana-sdk = "1.10.8"
+serde = "1.0.136"
+serde_derive = "1.0.136"
+serde_json = "1.0.79"
+serde_yaml = "0.8.23"
+solana-client = "1.9.18"
+solana-logger = "1.9.18"
+solana-version = "1.9.18"
+solana-clap-utils = "1.9.18"
+solana-sdk = "1.9.18"
 solana-farm-sdk = { path = "../farm-sdk" }
 solana-farm-client = { path = "../farm-client" }
-solana-account-decoder = "1.10.8"
+solana-account-decoder = "1.9.18"
 url = "2.2.2"

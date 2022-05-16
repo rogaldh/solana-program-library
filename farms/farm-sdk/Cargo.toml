@@ -1,9 +1,9 @@
 [package]
 name = "solana-farm-sdk"
-version = "0.0.1"
+version = "1.0.0"
 description = "Solana Farm SDK"
 authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana-program-library"
+repository = "https://github.com/solana-labs/solana-program-library/farms"
 license = "Apache-2.0"
 homepage = "https://solana.com/"
 edition = "2021"
@@ -29,6 +29,7 @@ quarry-redeemer = { version = "5.0.2", features = ["no-entrypoint"] }
 pyth-client = { version = "=0.5.0", features = ["no-entrypoint"] }
 stable-swap-client = "1.8.1"
 uint = "0.9.1"
+lazy_static = "1.4.0"
 
 [dev-dependencies]
 solana-program-test = "1.9.18"

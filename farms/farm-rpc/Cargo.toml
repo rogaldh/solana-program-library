@@ -1,9 +1,9 @@
 [package]
 name = "solana-farm-rpc"
-version = "0.0.1"
+version = "1.0.0"
 description = "Solana Farm RPC"
 authors = ["Solana Maintainers <maintainers@solana.foundation>"]
-repository = "https://github.com/solana-labs/solana-program-library"
+repository = "https://github.com/solana-labs/solana-program-library/farms"
 license = "Apache-2.0"
 homepage = "https://solana.com/"
 edition = "2021"
@@ -28,7 +28,17 @@ solana-logger = "1.9.18"
 solana-version = "1.9.18"
 solana-clap-utils = "1.9.18"
 solana-sdk = "1.9.18"
-solana-farm-sdk = { path = "../farm-sdk" }
-solana-farm-client = { path = "../farm-client" }
+solana-farm-sdk = {path="../farm-sdk"}
+solana-farm-client = {path="../farm-client"}
 solana-account-decoder = "1.9.18"
+solana-cli-config = "1.9.18"
+rusqlite = "0.27.0"
 url = "2.2.2"
+
+[[bin]]
+name = "solana-farm-rpc"
+path = "src/rpc/main.rs"
+
+[[bin]]
+name = "solana-farm-stats"
+path = "src/stats/main.rs"

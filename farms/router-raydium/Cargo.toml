@@ -1,6 +1,6 @@
 [package]
 name = "solana-router-raydium"
-version = "1.0.0"
+version = "1.1.0"
 description = "Solana Raydium Router"
 authors = ["Solana Maintainers <maintainers@solana.foundation>"]
 repository = "https://github.com/solana-labs/solana-program-library/farms"
@@ -15,6 +15,7 @@ debug = []
 [dependencies]
 solana-farm-sdk = {path="../farm-sdk"}
 solana-program = "1.9.18"
+solana-security-txt = "1.0.1"
 arrayref = "0.3.6"
 
 [dev-dependencies]

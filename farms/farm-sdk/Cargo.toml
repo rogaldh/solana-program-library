@@ -1,6 +1,6 @@
 [package]
 name = "solana-farm-sdk"
-version = "1.0.0"
+version = "1.1.0"
 description = "Solana Farm SDK"
 authors = ["Solana Maintainers <maintainers@solana.foundation>"]
 repository = "https://github.com/solana-labs/solana-program-library/farms"
@@ -30,6 +30,10 @@ pyth-client = { version = "=0.5.0", features = ["no-entrypoint"] }
 stable-swap-client = "1.8.1"
 uint = "0.9.1"
 lazy_static = "1.4.0"
+ahash = "0.7.6"
+
+[build-dependencies]
+solana-program = "1.9.18"
 
 [dev-dependencies]
 solana-program-test = "1.9.18"

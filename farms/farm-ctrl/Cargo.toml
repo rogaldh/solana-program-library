@@ -23,8 +23,8 @@ solana-logger = "1.9.18"
 solana-version = "1.9.18"
 solana-clap-utils = "1.9.18"
 solana-sdk = "1.9.18"
-solana-farm-sdk = {path="../farm-sdk"}
-solana-farm-client = {path="../farm-client"}
+solana-farm-sdk = "1.1.0"
+solana-farm-client = "1.1.0"
 spl-associated-token-account = { version = "=1.0.3", features = ["no-entrypoint"] }
 spl-token = { version = "3.2.0", features = ["no-entrypoint"] }
 spl-governance = { version = "2.1.4", features = ["no-entrypoint"] }

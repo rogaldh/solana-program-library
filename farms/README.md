@@ -8,7 +8,7 @@ It is powered by Solana blockchain to allow for frequent automatic compounding, 
 
 One of the distinct features of this platform is the On-chain Reference Database. Metadata for all objects: Tokens, Pools, Farms, Vaults, etc., is stored in the blockchain, so clients don't need any state or hard-coded data.
 
-Solana Yield Farming provides an unified interface to Funds, Vaults, regular AMM Pools, Farms, and basic operations on tokens and accounts. Currently, Raydium, Saber, and Orca protocols are supported, but others are under development.
+Solana Yield Farming provides a unified interface to Funds, Vaults, regular AMM Pools, Farms, and basic operations on tokens and accounts. Raydium, Saber, and Orca protocols are currently supported, but others are under development.
 
 This source code is an example that third parties can utilize to create and use their own version of a yield farming or aggregation service.
 
@@ -25,7 +25,7 @@ client.stake(&keypair, "RDM.RAY-SOL", 0.0);
 client.harvest(&keypair, "RDM.RAY-SOL");
 ```
 
-to swap 0.1 SOL for RAY, deposit RAY and SOL to a Raydium pool, stake LP tokens, and harvest rewards. `RDM` above is a route or protocol, use `SBR` for Saber pools, and `ORC` for Orca. All metadata required to lookup account addresses, decimals, etc., is stored on-chain. The Client also allows building raw unsigned instructions to be integrated into more complex workflows. See `farms/farm-client/src/client.rs` for examples.
+to swap 0.1 SOL for RAY, deposit RAY and SOL to a Raydium pool, stake LP tokens, and harvest rewards. `RDM` above is a route or protocol. Use `SBR` for Saber pools and `ORC` for Orca. All metadata required to lookup account addresses, decimals, etc., is stored on-chain. The Client also allows building raw unsigned instructions to be integrated into more complex workflows. See `farms/farm-client/src/client.rs` for examples.
 
 The Client caches metadata to make subsequent calls faster, most noticeably queries that list a large number of objects, like `get_pools()`.
 
@@ -96,7 +96,7 @@ Vaults are on-chain programs that implement various yield farming strategies. Un
 - Vaults should be cranked on a periodic basis. Crank operation is permissionless and can be done by anyone. And it is executed for the entire Vault, not per individual user. Crank consists of three steps: 1. Harvest Farm rewards (in one or both tokens); 2. Rebalance rewards to get proper amounts of each token; 3. Place rewards back into the Pool and stake received LP tokens. A small Vault fee is taken from rewards, and it can be used to incentivize Crank operations.
 - Upon liquidity removal, the user gets original tokens back in amounts proportional to Vault tokens they hold. Vault tokens are then burned.
 
-`SBR-STAKE-LP-COMPOUND` and `ORC-STAKE-LP-COMPOUND` are similar strategies, but use Saber and Orca protocols.
+`SBR-STAKE-LP-COMPOUND` and `ORC-STAKE-LP-COMPOUND` are similar strategies but use Saber and Orca protocols.
 
 ### Main Router
 
@@ -104,11 +104,11 @@ An on-chain program that handles the creation, updates, and deletion of all meta
 
 ### Protocol Routers (Raydium, Saber, and Orca)
 
-An on-chain programs that demonstrates interaction with Raydium, Saber, and Orca pools and farms. They performs in and out amounts calculations and safety checks for tokens spent and received. They don't hold user funds but validate, wrap, and send instructions to the AMMs and farms.
+An on-chain programs that demonstrate interaction with Raydium, Saber, and Orca pools and farms. They perform in and out amounts calculations and safety checks for tokens spent and received. They don't hold user funds but validate, wrap, and send instructions to the AMMs and farms.
 
 ### Fund
 
-A Fund program implements a decentralized, non-custodial, and trustless capital management protocol. It is built on top of supported liquidity protocols, including Farm Vaults. Fund Managers are responsible for selecting a portfolio of assets that their Fund will hold. These assets can be in various forms: individual tokens, liquidity invested into different pools, staked into farms, or deposited into Farm Vaults.
+A Fund program implements a decentralized, non-custodial, and trustless capital management protocol. It is built on top of supported liquidity protocols, including Farm Vaults. Fund Managers are responsible for selecting a portfolio of assets their Fund will hold. These assets can be in various forms: individual tokens, liquidity invested into different pools, staked into farms, or deposited into Farm Vaults.
 
 Fund Managers are allowed to perform a specific set of operations with tokens: swap, add/remove liquidity, stake/unstake/harvest, etc., and only in approved pools, while all other actions are forbidden. This is enforced by the Fund program and allows investors to earn passive returns while maintaining custody of their assets (by holding Fund tokens that are minted upon each deposit and can be withdrawn for underlying assets).
 
@@ -116,7 +116,7 @@ There could be any number of Funds, each implementing its assets management stra
 
 ## Build
 
-Before starting the build set `MAIN_ROUTER_ID` and `MAIN_ROUTER_ADMIN` environment variables. They should point to existing main router program and admin account or generate a new set of keys if you plan to maintain your own version of the reference database:
+Before starting the build, set `MAIN_ROUTER_ID` and `MAIN_ROUTER_ADMIN` environment variables. They should point to the existing main router program and admin account or generate a new set of keys if you plan to maintain your own version of the reference database:
 
 ```
 solana-keygen new -o main_admin.json
@@ -125,18 +125,19 @@ solana-keygen new -o main_router.json
 
 These keys must be used for main router deployment.
 
-To build the off-chain library or program, run the `cargo build` command from each project directory, for example:
+To build the off-chain libraries and programs, run the `cargo build` command from the farms directory:
 
 ```sh
 export MAIN_ROUTER_ID="RepLaceThisWithVaLidMainRouterProgramPubkey"
 export MAIN_ROUTER_ADMIN="RepLaceThisWithCorrectMainRouterAdminPubkey"
-cd farms/farm-client
+cd farms
 cargo build --release
 ```
 
 To build on-chain programs, use the standard build command for Solana programs:
 
 ```sh
+cd farms/router-main
 cargo build-bpf
 ```
 
@@ -147,12 +148,21 @@ cd farms/vaults
 cargo build-bpf --no-default-features --features SBR-STAKE-LP-COMPOUND
 ```
 
+Every time you re-build the vault program with another strategy, it overwrites the same file (solana_vaults.so), so upon deploying, you should specify which address to deploy to, e.g.:
+
+```sh
+solana-keygen new -o vault_raydium.json
+cd farms/vaults
+cargo build-bpf --no-default-features --features RDM-STAKE-LP-COMPOUND
+solana program deploy --program-id vault_raydium.json target/deploy/solana_vaults.so
+```
+
 ## Test
 
 Tests are executed with the `cargo test` command:
 
 ```sh
-cd farms/farm-sdk
+cd farms
 cargo test
 ```
 
@@ -162,7 +172,7 @@ Integration tests are located in the `farm-client/tests` and `fund/tests` direct
 cargo test -- --nocapture --test-threads=1 --ignored
 ```
 
-Bear in mind that integration tests execute transactions, and it will cost you some SOL.
+Remember that integration tests execute transactions on mainnet, which will cost you some SOL.
 
 ## Deploy & Run
 
@@ -187,7 +197,7 @@ Open http://127.0.0.1:9090 in a browser to see available endpoints or check prov
 
 ## On-chain Reference Database
 
-This project uses on-chain reference database to store required metadata. If you plan to maintain your own copy of the database you need to build and deploy main router and initialize the storage, otherwise skip this step.
+This project uses an on-chain reference database to store the required metadata. If you plan to maintain your own copy of the database, you need to build and deploy main router and initialize the storage. Otherwise, skip this step.
 
 First, generate PDA addresses for the RefDB indexes:
 
@@ -195,7 +205,7 @@ First, generate PDA addresses for the RefDB indexes:
 solana-farm-ctrl print-pda-all
 ```
 
-Update `farm-ctrl/src/metadata/programs/programs.json` with newly generated addresses.
+Update `farm-ctrl/src/metadata/programs/programs.json` with newly generated addresses and addresses of your deployed programs (anything that has a blank address in that file needs to be updated).
 
 Initialize the storage:
 
@@ -206,29 +216,46 @@ solana-farm-ctrl --keypair main_admin.json init-all
 And upload metadata:
 
 ```sh
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Program src/metadata/programs/programs.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Token src/metadata/tokens/solana_token_list/tokens.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Token src/metadata/tokens/raydium/lp_tokens.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Pool src/metadata/pools/raydium/pools.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Farm src/metadata/farms/raydium/farms.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Token src/metadata/tokens/saber/tokens.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Pool src/metadata/pools/saber/pools_and_farms.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Farm src/metadata/pools/saber/pools_and_farms.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Pool src/metadata/pools/orca/pools.json
-solana-farm-ctrl --keypair main_admin.json load --skip-existing Farm src/metadata/pools/orca/farms.json
+cd farms/farm-ctrl
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Token metadata/tokens/solana_token_list/filtered_tokens.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Token metadata/pools/raydium/pools.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Token metadata/pools/saber/pools.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Token metadata/pools/orca/pools.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Token metadata/farms/orca/farms.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Pool metadata/pools/raydium/pools.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Farm metadata/farms/raydium/farms.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Pool metadata/pools/saber/pools_and_farms.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Farm metadata/farms/saber/pools_and_farms.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Pool metadata/pools/orca/pools.json
+solana-farm-ctrl  --keypair main_admin.json load --skip-existing Farm metadata/farms/orca/farms.json
 ```
 
-To generate metadata for Vaults run:
+To generate metadata for all Raydium Vaults, run:
 
 ```sh
-solana-farm-ctrl --keypair main_admin.json generate Vault [VAULT_PROGRAM_ADDRESS] [VAULT_NAME] [VAULT_TOKEN_NAME]
+cd farms/farm-ctrl/metadata/vaults
+./generate_vaults.py vaults_rdm.json tokens_rdm.json [VAULT_PROG_ID] RDM
 ```
 
 And then upload it:
 
 ```sh
-solana-farm-ctrl --keypair main_admin.json load Token src/metadata/tokens/vault_tokens/vault_tokens.json
-solana-farm-ctrl --keypair main_admin.json load Vault src/metadata/vaults/stc_saber/vaults.json
+solana-farm-ctrl --keypair main_admin.json load token tokens_rdm.json
+solana-farm-ctrl --keypair main_admin.json load vault vaults_rdm.json
+```
+
+Similarly, metadata can be generated and uploaded for Orca and Saber Vaults. Also, it is possible to generate metadata only for a single Vault with:
+
+```sh
+solana-farm-ctrl --keypair main_admin.json generate Vault [VAULT_PROGRAM_ADDRESS] [VAULT_NAME] [VAULT_TOKEN_NAME]
+```
+
+After Vaults and Vault tokens have been uploaded, Vaults need to be initialized with:
+
+```sh
+solana-farm-ctrl vault-init all
+solana-farm-ctrl vault-enable-deposits all
+solana-farm-ctrl vault-enable-withdrawals all
 ```
 
 To generate metadata for Funds run:
@@ -240,9 +267,34 @@ solana-farm-ctrl --keypair main_admin.json generate Fund [FUND_PROGRAM_ADDRESS] 
 And then upload it:
 
 ```sh
-solana-farm-ctrl --keypair main_admin.json load Token src/metadata/tokens/fund_tokens/fund_tokens.json
-solana-farm-ctrl --keypair main_admin.json load Fund src/metadata/fund/funds.json
+solana-farm-ctrl --keypair main_admin.json load token fund_tokens.json
+solana-farm-ctrl --keypair main_admin.json load fund funds.json
 ```
+
+## Multisig
+
+Multi-signature mode is supported for all main router, vault, and fund transactions that require admin privileges, including program upgrades. To enable multisig for main router use:
+
+```sh
+solana-farm-ctrl set-admins [MIN_SIGNATURES] [ADMIN_KEY1] [ADMIN_KEY2]...
+```
+
+The maximum number of admin signers is six.
+
+To enable multisig for program upgrades, vaults, and funds use `solana-farm-ctrl program-set-admins`, `solana-farm-ctrl vault-set-admins`, and `solana-farm-ctrl fund-set-admins`.
+
+Multisig is fully transparent, no changes are required to how clients submit transactions. If a transaction requires multisig, API calls will return Ok (meaning intent was recorded on-chain) but won't be executed until enough signatures have been accumulated.
+
+If program upgrades multisig is enabled, then upgrades must be performed via main router using `solana-farm-ctrl program-upgrade`, e.g.:
+
+```sh
+# write program to an on-chain buffer and get the buffer address
+solana program write-buffer solana_router_raydium.so
+solana program set-buffer-authority --new-buffer-authority [MULTISIG_ADDRESS] [BUFFER_ADDRESS]
+solana-farm-ctrl program-upgrade [PROGRAM_ID] [BUFFER_ADDRESS]
+```
+
+set-admins commands can be used again to amend the existing set of admins (it will have to be signed by admins similar to other multisig transactions). To reset program upgrade multisig back to single authority, use `solana-farm-ctrl program-set-single-authority`
 
 ## Governance
 

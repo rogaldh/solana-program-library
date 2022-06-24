@@ -27,8 +27,8 @@ use {
     solana_farm_sdk::{
         farm::Farm,
         fund::{
-            Fund, FundAssets, FundCustody, FundInfo, FundSchedule, FundUserInfo, FundUserRequests,
-            FundVault,
+            Fund, FundAssets, FundCustody, FundCustodyWithBalance, FundInfo, FundSchedule,
+            FundUserInfo, FundUserRequests, FundVault,
         },
         pool::Pool,
         program::multisig::Multisig,
@@ -1647,6 +1647,28 @@ async fn get_fund_custody(
     Ok(Json(fund_custody))
 }
 
+/// Returns the Fund custody extended info
+#[get("/fund_custody_with_balance?<fund_name>&<token_name>&<custody_type>")]
+async fn get_fund_custody_with_balance(
+    fund_name: &str,
+    token_name: &str,
+    custody_type: &str,
+    farm_client: &State<FarmClientArc>,
+) -> Result<Json<FundCustodyWithBalance>, NotFound<String>> {
+    let custody_type = custody_type
+        .parse()
+        .map_err(|_| NotFound("Invalid custody_type argument".to_string()))?;
+    let farm_client = farm_client
+        .inner()
+        .lock()
+        .map_err(|e| NotFound(e.to_string()))?;
+    let fund_custody = farm_client
+        .get_fund_custody_with_balance(fund_name, token_name, custody_type)
+        .map_err(|e| NotFound(e.to_string()))?;
+
+    Ok(Json(fund_custody))
+}
+
 /// Returns all custodies belonging to the Fund sorted by custody_id
 #[get("/fund_custodies?<fund_name>")]
 async fn get_fund_custodies(
@@ -1659,6 +1681,23 @@ async fn get_fund_custodies(
         .map_err(|e| NotFound(e.to_string()))?;
     let fund_custodies = farm_client
         .get_fund_custodies(fund_name)
+        .map_err(|e| NotFound(e.to_string()))?;
+
+    Ok(Json(fund_custodies))
+}
+
+/// Returns all custodies belonging to the Fund with extended info
+#[get("/fund_custodies_with_balance?<fund_name>")]
+async fn get_fund_custodies_with_balance(
+    fund_name: &str,
+    farm_client: &State<FarmClientArc>,
+) -> Result<Json<Vec<FundCustodyWithBalance>>, NotFound<String>> {
+    let farm_client = farm_client
+        .inner()
+        .lock()
+        .map_err(|e| NotFound(e.to_string()))?;
+    let fund_custodies = farm_client
+        .get_fund_custodies_with_balance(fund_name)
         .map_err(|e| NotFound(e.to_string()))?;
 
     Ok(Json(fund_custodies))
@@ -4917,6 +4956,8 @@ pub async fn stage(config: &Config) -> AdHoc {
                     get_fund_assets,
                     get_fund_custody,
                     get_fund_custodies,
+                    get_fund_custody_with_balance,
+                    get_fund_custodies_with_balance,
                     get_fund_vault,
                     get_fund_vaults,
                     get_fund_stats,

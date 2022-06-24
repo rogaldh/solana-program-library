@@ -1,6 +1,6 @@
 [package]
 name = "solana-router-main"
-version = "1.1.1"
+version = "1.1.2"
 description = "Solana Farm Main Router"
 authors = ["Solana Maintainers <maintainers@solana.foundation>"]
 repository = "https://github.com/solana-labs/solana-program-library/farms"
@@ -13,7 +13,7 @@ no-entrypoint = []
 debug = []
 
 [dependencies]
-solana-farm-sdk = "1.1.1"
+solana-farm-sdk = "1.1.2"
 spl-token = { version = "3.2.0", features = ["no-entrypoint"] }
 solana-program = "1.9.18"
 solana-security-txt = "1.0.1"

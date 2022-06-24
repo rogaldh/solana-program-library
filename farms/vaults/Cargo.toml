@@ -1,6 +1,6 @@
 [package]
 name = "solana-vaults"
-version = "1.1.1"
+version = "1.1.2"
 description = "Solana Vaults"
 authors = ["Solana Maintainers <maintainers@solana.foundation>"]
 repository = "https://github.com/solana-labs/solana-program-library/farms"
@@ -18,7 +18,7 @@ ORC-STAKE-LP-COMPOUND = []
 default = ["RDM-STAKE-LP-COMPOUND"]
 
 [dependencies]
-solana-farm-sdk = "1.1.1"
+solana-farm-sdk = "1.1.2"
 solana-program = "1.9.18"
 solana-security-txt = "1.0.1"
 spl-token = { version = "3.2.0", features = ["no-entrypoint"] }

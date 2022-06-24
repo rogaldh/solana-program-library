@@ -745,9 +745,39 @@ paths:
       responses:
         default:
           description: Json object or error string
+  /api/v1/fund_custody_with_balance:
+    get:
+      description: "Returns the Fund custody extended info"
+      parameters:
+        - name: fund_name
+          in: query
+          schema:
+            type: string
+        - name: token_name
+          in: query
+          schema:
+            type: string
+        - name: custody_type
+          in: query
+          schema:
+            type: string
+      responses:
+        default:
+          description: Json object or error string
   /api/v1/fund_custodies:
     get:
       description: "Returns all custodies belonging to the Fund sorted by custody_id"
+      parameters:
+        - name: fund_name
+          in: query
+          schema:
+            type: string
+      responses:
+        default:
+          description: Json object or error string
+  /api/v1/fund_custodies_with_balance:
+    get:
+      description: "Returns all custodies belonging to the Fund with extended info"
       parameters:
         - name: fund_name
           in: query

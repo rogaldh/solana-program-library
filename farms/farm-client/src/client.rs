@@ -3330,7 +3330,7 @@ impl FarmClient {
         })
     }
 
-    /// Returns all custodies extended info
+    /// Returns all custodies belonging to the Fund with extended info
     pub fn get_fund_custodies_with_balance(
         &self,
         fund_name: &str,

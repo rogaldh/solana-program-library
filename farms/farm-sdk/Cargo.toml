@@ -1,6 +1,6 @@
 [package]
 name = "solana-farm-sdk"
-version = "1.1.1"
+version = "1.1.2"
 description = "Solana Farm SDK"
 authors = ["Solana Maintainers <maintainers@solana.foundation>"]
 repository = "https://github.com/solana-labs/solana-program-library/farms"

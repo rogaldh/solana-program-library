@@ -1,6 +1,6 @@
 [package]
 name = "solana-farm-client"
-version = "1.1.1"
+version = "1.1.2"
 description = "Solana Farm Client"
 authors = ["Solana Maintainers <maintainers@solana.foundation>"]
 repository = "https://github.com/solana-labs/solana-program-library/farms"
@@ -25,7 +25,7 @@ solana-cli-config = "1.9.18"
 solana-account-decoder = "1.9.18"
 solana-logger = "1.9.18"
 solana-version = "1.9.18"
-solana-farm-sdk = "1.1.1"
+solana-farm-sdk = "1.1.2"
 solana-clap-utils = "1.9.18"
 spl-token = { version = "3.2.0", features = ["no-entrypoint"] }
 spl-associated-token-account = { version = "=1.0.3", features = ["no-entrypoint"] }

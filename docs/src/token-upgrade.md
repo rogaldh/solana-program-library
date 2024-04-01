@@ -151,3 +151,9 @@ rent-exempt lamports.
 ```sh
 $ spl-token close o1d5Jt8z8vszx4FJ2gNJ3FZH34cer9sbparg7GVt7qm
 ```
+
+## Token Upgrade UI
+
+Mint owners can use the `Token Upgrade UI` project to provide the upgrade functionality for holders.
+
+It contains an application that can be deployed on [Vercel](https://vercel.com). For details, see [the project source]().
